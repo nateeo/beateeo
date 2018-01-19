@@ -59,6 +59,14 @@ const initialize = () => {
     if (command == 'play') {
       commands.play(message, message.content.split(' ')[1])
     }
+
+    if (command == 'skip') {
+      commands.skip()
+    }
+
+    if (command == 'queue') {
+      commands.showQueue(message)
+    }
   })
 
   process.on('SIGINT', () => client.destroy())

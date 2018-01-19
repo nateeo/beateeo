@@ -11,7 +11,7 @@ let channel
 
 const playNext = () => {
   if (queue.length == 0) return
-  const song = queue.shift()
+  const song = queue[0]
   voiceChannel
     .join()
     .then(connection => {
@@ -22,7 +22,10 @@ const playNext = () => {
       })
       dispatcher.on('info', info => console.log(info))
       dispatcher.on('error', console.error)
-      dispatcher.on('end', playNext)
+      dispatcher.on('end', () => {
+        queue.shift()
+        playNext()
+      })
     })
     .catch(console.error)
 }
@@ -38,15 +41,30 @@ const play = (message, song) => {
   if (!YOUTUBE_REGEX.test(url)) {
     return message.reply('Sorry, I currently only accept valid youtube urls :(')
   }
-  queue.push(url)
-  if (queue.length == 1) {
+  if (queue.length == 0) {
     channel.send('Now playing your song!')
+    queue.push(url)
     playNext()
   } else {
+    queue.push(url)
     channel.send('Song queued!')
   }
 }
 
+const skip = () => {
+  playNext()
+}
+
+const showQueue = message => {
+  let result = ''
+  queue.forEach((value, index) => {
+    result += index + ': ' + value + '\n'
+  })
+  message.channel.send(result)
+}
+
 export default {
   play,
+  skip,
+  showQueue,
 }
