@@ -52,9 +52,17 @@ const initialize = () => {
     if (message.author.bot) return
     if (message.content.indexOf('!') !== 0 || message.content.length < 2) return
 
-    const command = message.content
-      .substr(1, message.content.indexOf(' '))
-      .trim()
+    let command
+    if (
+      message.content.indexOf(' ') === -1 ||
+      message.content.lastIndexOf(' ') === 0
+    ) {
+      command = message.content.substr(1).trim()
+    } else {
+      command = message.content.substr(1, message.content.indexOf(' ')).trim()
+    }
+
+    console.log('command is ' + command)
 
     if (command == 'play') {
       commands.play(message, message.content.split(' ')[1])
@@ -67,10 +75,13 @@ const initialize = () => {
     if (command == 'queue') {
       commands.showQueue(message)
     }
+
+    if (command == 'volume') {
+      commands.setVolume(message)
+    }
   })
 
   process.on('SIGINT', () => client.destroy())
-
   client.login(token)
 }
 

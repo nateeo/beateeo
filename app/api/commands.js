@@ -5,6 +5,10 @@ const YOUTUBE_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(
 
 const queue = []
 
+let volume = 0.15
+
+let currentDispatcher = null
+
 let voiceChannel
 
 let channel
@@ -15,14 +19,17 @@ const playNext = () => {
   voiceChannel
     .join()
     .then(connection => {
+      channel.send('now playing: ' + song)
       const stream = ytdl(song, { filter: 'audioonly' })
       const dispatcher = connection.playStream(stream, {
         seek: 0,
-        volume: 0.15,
+        volume: volume,
       })
+      currentDispatcher = dispatcher
       dispatcher.on('info', info => console.log(info))
       dispatcher.on('error', console.error)
       dispatcher.on('end', () => {
+        currentDispatcher = null
         queue.shift()
         playNext()
       })
@@ -42,13 +49,20 @@ const play = (message, song) => {
     return message.reply('Sorry, I currently only accept valid youtube urls :(')
   }
   if (queue.length == 0) {
-    channel.send('Now playing your song!')
     queue.push(url)
     playNext()
   } else {
     queue.push(url)
     channel.send('Song queued!')
   }
+}
+
+const pause = () => {
+  if (currentDispatcher && !currentDispatcher.paused) currentDispatcher.pause()
+}
+
+const resume = () => {
+  if (currentDispatcher && currentDispatcher.paused) currentDispatcher.resume()
 }
 
 const skip = () => {
@@ -63,8 +77,19 @@ const showQueue = message => {
   message.channel.send(result)
 }
 
+const setVolume = message => {
+  const value = message.content.split(' ')[1].trim()
+  if (!isNaN(value) && value > 0 && value <= 100) {
+    volume = value / 100
+    message.reply('Volume is now ' + volume)
+  } else {
+    message.reply('Invalid volume setting! (0 < volume <= 100')
+  }
+}
+
 export default {
   play,
   skip,
   showQueue,
+  setVolume,
 }
