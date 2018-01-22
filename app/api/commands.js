@@ -66,6 +66,7 @@ const resume = () => {
 }
 
 const skip = () => {
+  queue.shift()
   playNext()
 }
 

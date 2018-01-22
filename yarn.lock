@@ -2043,6 +2043,10 @@ clone@^1.0.0, clone@^1.0.2:
   version "1.0.3"
   resolved "https://registry.npmjs.org/clone/-/clone-1.0.3.tgz#298d7e2231660f40c003c2ed3140decf3f53085f"
 
+clone@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.1.tgz#d217d1e961118e3ac9a4b8bba3285553bf647cdb"
+
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.npmjs.org/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -3158,6 +3162,13 @@ electron-rebuild@^1.6.0:
 electron-releases@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/electron-releases/-/electron-releases-2.1.0.tgz#c5614bf811f176ce3c836e368a0625782341fd4e"
+
+electron-settings@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/electron-settings/-/electron-settings-3.1.4.tgz#1b670837fd00626395714210291fb4af8ff52880"
+  dependencies:
+    clone "^2.1.1"
+    jsonfile "^4.0.0"
 
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
   version "1.3.30"
@@ -9808,6 +9819,14 @@ type-is@~1.6.15:
 typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+
+typeface-fredoka-one@^0.0.44:
+  version "0.0.44"
+  resolved "https://registry.yarnpkg.com/typeface-fredoka-one/-/typeface-fredoka-one-0.0.44.tgz#fa48dcd73ca6586641aec8b2d3af804cf249ecf5"
+
+typeface-open-sans@0.0.45:
+  version "0.0.45"
+  resolved "https://registry.yarnpkg.com/typeface-open-sans/-/typeface-open-sans-0.0.45.tgz#cd4700eb9ed4c83f5fe95ef0540b4053110bfccf"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"

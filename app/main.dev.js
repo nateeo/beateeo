@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import MenuBuilder from './menu'
 
 import initialize from './api/bot'
@@ -48,7 +48,9 @@ app.on('ready', async () => {
     process.env.DEBUG_PROD === 'true'
   ) {
     await installExtensions()
-    initialize()
+    ipcMain.on('initialize', () => {
+      initialize()
+    })
   }
 
   mainWindow = new BrowserWindow({

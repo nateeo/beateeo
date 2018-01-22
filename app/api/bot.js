@@ -45,7 +45,7 @@ const initialize = () => {
     console.log(`token: ${token}\nowner: ${owner}`)
     console.log('searching for owner...')
     getOwner()
-    client.user.setGame('good music')
+    client.user.setActivity('good music', {}, '', 'STREAMING')
   })
 
   client.on('message', async message => {
