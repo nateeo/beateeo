@@ -39,10 +39,11 @@ const getOwner = () => {
   })
 }
 
-const initialize = () => {
+const initialize = inputToken => {
+  const t = inputToken ? inputToken : token
   client.on('ready', () => {
     console.log('DISCORDEEO IS READY')
-    console.log(`token: ${token}\nowner: ${owner}`)
+    console.log(`token: ${t}\nowner: ${owner}`)
     console.log('searching for owner...')
     getOwner()
     client.user.setActivity('good music', {}, '', 'STREAMING')
@@ -61,6 +62,8 @@ const initialize = () => {
     } else {
       command = message.content.substr(1, message.content.indexOf(' ')).trim()
     }
+
+    // todo dynamically load commands
 
     console.log('command is ' + command)
 
@@ -82,7 +85,7 @@ const initialize = () => {
   })
 
   process.on('SIGINT', () => client.destroy())
-  client.login(token)
+  client.login(t)
 }
 
 export default initialize
