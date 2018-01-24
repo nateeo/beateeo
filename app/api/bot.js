@@ -2,6 +2,7 @@ import Discord from 'discord.js'
 import ytdl from 'ytdl-core'
 import path from 'path'
 
+import { createMainStore } from '../utils/stateHelpers'
 import config from './config.json'
 import commands from './commands.js'
 
@@ -14,6 +15,8 @@ let state = {
   volume: 0.15,
   queue: [],
 }
+
+let store
 
 const responses = ['yes', 'no', 'maybe', 'ask Gweilo']
 
@@ -37,6 +40,12 @@ const getOwner = () => {
       })
     }
   })
+}
+
+const setup = browserWindow => {
+  if (!store) {
+    store = createMainStore(browserWindow)
+  }
 }
 
 const initialize = inputToken => {
@@ -88,4 +97,4 @@ const initialize = inputToken => {
   client.login(t)
 }
 
-export default initialize
+export default setup

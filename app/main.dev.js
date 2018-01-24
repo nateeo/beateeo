@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import MenuBuilder from './menu'
 
-import initialize from './api/bot'
+import setup from './api/bot'
 
 let mainWindow = null
 
@@ -48,7 +48,6 @@ app.on('ready', async () => {
     process.env.DEBUG_PROD === 'true'
   ) {
     await installExtensions()
-    initialize()
   }
 
   mainWindow = new BrowserWindow({
@@ -67,7 +66,8 @@ app.on('ready', async () => {
     }
     mainWindow.show()
     mainWindow.focus()
-    ipcMain.on('initialize', initialize)
+
+    setup(mainWindow)
   })
 
   mainWindow.on('closed', () => {
