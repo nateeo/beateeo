@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { ipcRenderer } from 'electron'
 
 import Input from '../components/Input'
 import Button from '../components/Button'
-
+import history from '../utils/history'
 import colors from '../constants/colors'
 
 const Container = styled.div`
@@ -41,14 +42,56 @@ const Login = styled.div`
 `
 
 export default class Home extends Component {
+  state = {
+    token: '',
+    loading: false,
+    error: false,
+  }
+
+  componentDidMount = () => {
+    ipcRenderer.on('login', this.handleMainLoginResponse)
+  }
+
+  handleTokenChange = e => {
+    this.setState({
+      token: e.target.value.trim(),
+    })
+  }
+
+  handleLogin = () => {
+    this.setState({ loading: true })
+    ipcRenderer.send('login', this.state.token)
+  }
+
+  handleMainLoginResponse = (event, status, response) => {
+    if (status === 'success') {
+      console.log('succesfully logged in')
+      history.push('/dashboard')
+    } else {
+      console.log('error logging in')
+      this.setState({
+        loading: false,
+        error: true,
+      })
+    }
+    // status: 'success' w/ token as response, 'error' w/ empty object as response
+  }
+
+  componentWillUnmount = () => {
+    ipcRenderer.removeAllListeners('login')
+  }
+
   render() {
-    console.log(this.props)
     return (
       <Container>
         <Title>Beateeo</Title>
         <Login>
-          <Input placeholder="Token" />
-          <Button color={colors.primary} colorShade={colors.primaryShade}>
+          <Input
+            placeholder="Token"
+            value={this.state.token}
+            onChange={this.handleTokenChange}
+          />
+          <Button color={colors.primary} onClick={this.handleLogin}>
             Login
           </Button>
         </Login>

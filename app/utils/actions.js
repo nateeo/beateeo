@@ -4,11 +4,16 @@
 const QUEUE_ADD = 'QUEUE_ADD'
 const QUEUE_REMOVE = 'QUEUE_REMOVE'
 const QUEUE_SKIP = 'QUEUE_SKIP'
+const QUEUE_PAUSE = 'QUEUE_PAUSE'
+const QUEUE_RESUME = 'QUEUE_RESUME'
 
 const UPDATE_VOLUME = 'UPDATE_VOLUME'
 
 const reducer = (state, action) => {
-  const payload = { action }
+  console.log('in reducer')
+  console.log('action is')
+  console.log(action)
+  const payload = action.payload
   switch (action.type) {
     case QUEUE_ADD:
       return {
@@ -23,14 +28,26 @@ const reducer = (state, action) => {
       }
       break
     case UPDATE_VOLUME:
-      return {
+      const newState = {
         ...state,
         volume: payload,
       }
+      console.log('new state')
+      console.log(newState)
+      return newState
       break
+    default:
+      console.log('INVALID ACTION TYPE ' + action.type)
   }
 }
 
 export default reducer
 
-export { UPDATE_VOLUME, QUEUE_ADD }
+export {
+  QUEUE_ADD,
+  QUEUE_REMOVE,
+  QUEUE_SKIP,
+  QUEUE_PAUSE,
+  QUEUE_RESUME,
+  UPDATE_VOLUME,
+}

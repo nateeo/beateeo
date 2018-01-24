@@ -1,7 +1,8 @@
 import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 
 import { createRendererStore } from '../utils/stateHelpers'
+import history from '../utils/history'
 import Provider from './Provider'
 import Routes from '../routes'
 
@@ -10,9 +11,9 @@ const store = createRendererStore()
 const Root = () => {
   return (
     <Provider store={store}>
-      <BrowserRouter>
+      <Router history={history}>
         <Routes />
-      </BrowserRouter>
+      </Router>
     </Provider>
   )
 }

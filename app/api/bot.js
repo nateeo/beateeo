@@ -1,6 +1,7 @@
 import Discord from 'discord.js'
 import ytdl from 'ytdl-core'
 import path from 'path'
+import { ipcMain } from 'electron'
 
 import { createMainStore } from '../utils/stateHelpers'
 import config from './config.json'
@@ -17,8 +18,6 @@ let state = {
 }
 
 let store
-
-const responses = ['yes', 'no', 'maybe', 'ask Gweilo']
 
 const getOwner = () => {
   client.guilds.forEach(guild => {
@@ -42,59 +41,36 @@ const getOwner = () => {
   })
 }
 
+let loggingIn = false
+
+const initialize = (event, inputToken) => {
+  if (loggingIn) {
+    console.log('login request already in-flight')
+    return
+  }
+  console.log('logging in...')
+  loggingIn = true
+  const t = inputToken ? inputToken : token
+  console.log('trying to login with ' + t)
+  client.login(t).then(
+    token => {
+      event.sender.send('login', 'success', token)
+      console.log('succesfully logged in')
+      loggingIn = false
+    },
+    e => {
+      event.sender.send('login', 'error', e)
+      console.log('error logging in')
+      loggingIn = false
+    }
+  )
+}
+
 const setup = browserWindow => {
   if (!store) {
     store = createMainStore(browserWindow)
   }
-}
-
-const initialize = inputToken => {
-  const t = inputToken ? inputToken : token
-  client.on('ready', () => {
-    console.log('DISCORDEEO IS READY')
-    console.log(`token: ${t}\nowner: ${owner}`)
-    console.log('searching for owner...')
-    getOwner()
-    client.user.setActivity('good music', {}, '', 'STREAMING')
-  })
-
-  client.on('message', async message => {
-    if (message.author.bot) return
-    if (message.content.indexOf('!') !== 0 || message.content.length < 2) return
-
-    let command
-    if (
-      message.content.indexOf(' ') === -1 ||
-      message.content.lastIndexOf(' ') === 0
-    ) {
-      command = message.content.substr(1).trim()
-    } else {
-      command = message.content.substr(1, message.content.indexOf(' ')).trim()
-    }
-
-    // todo dynamically load commands
-
-    console.log('command is ' + command)
-
-    if (command == 'play') {
-      commands.play(message, message.content.split(' ')[1])
-    }
-
-    if (command == 'skip') {
-      commands.skip()
-    }
-
-    if (command == 'queue') {
-      commands.showQueue(message)
-    }
-
-    if (command == 'volume') {
-      commands.setVolume(message)
-    }
-  })
-
-  process.on('SIGINT', () => client.destroy())
-  client.login(t)
+  ipcMain.on('login', initialize)
 }
 
 export default setup

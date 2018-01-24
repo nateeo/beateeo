@@ -12,11 +12,11 @@ const initialState = {
 }
 
 const createStore = browserWindow => {
+  let state = initialState
+  const subscribers = []
   const notify = browserWindow
     ? browserWindow.webContents.send
     : ipcRenderer.send
-  let state = initialState
-  const subscribers = []
   const update = action => {
     state = reducer(state, action)
     subscribers.forEach(handler => handler())
@@ -31,6 +31,7 @@ const createStore = browserWindow => {
       console.log(`syncing to ${action.type} event`)
       update(action)
     },
+    getState: () => state,
     subscribe: handler => {
       subscribers.push(handler)
       return () => {
@@ -108,7 +109,13 @@ const connect = (
     componentWillUnmount() {
       this.unsubscribe()
     }
+
+    render() {
+      return <Component {...this.props} {...this.state} />
+    }
   }
+
+  return Connected
 }
 
 export { createRendererStore, createMainStore, connect }
