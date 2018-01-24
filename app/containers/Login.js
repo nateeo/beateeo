@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-import Input from './Input'
-import Button from './Button'
+import Input from '../components/Input'
+import Button from '../components/Button'
 
 import colors from '../constants/colors'
 
@@ -42,6 +42,7 @@ const Login = styled.div`
 
 export default class Home extends Component {
   render() {
+    console.log(this.props)
     return (
       <Container>
         <Title>Beateeo</Title>

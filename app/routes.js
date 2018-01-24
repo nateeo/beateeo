@@ -2,12 +2,14 @@
 import React from 'react'
 import { Switch, Route } from 'react-router'
 import App from './containers/App'
-import HomePage from './containers/HomePage'
+import Login from './containers/Login'
 
-export default () => (
+const LoginWithProps = props => <Login {...props} />
+
+export default props => (
   <App>
     <Switch>
-      <Route path="/" component={HomePage} />
+      <Route path="/" render={LoginWithProps} />
     </Switch>
   </App>
 )

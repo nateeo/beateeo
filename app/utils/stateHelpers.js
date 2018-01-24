@@ -8,6 +8,7 @@ const STATE_CHANNEL = 'state'
 const initialState = {
   queue: [],
   volume: 0.15,
+  isPlaying: true,
 }
 
 const createStore = browserWindow => {
