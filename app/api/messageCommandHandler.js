@@ -46,4 +46,4 @@ const setupListeners = client => {
   console.log('initialised message command handler')
 }
 
-export setupListeners
+export { setupListeners }

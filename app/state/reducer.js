@@ -1,15 +1,13 @@
-// export named actions
-// export default REDUCER
+import {
+  QUEUE_ADD,
+  QUEUE_REMOVE,
+  QUEUE_SKIP,
+  QUEUE_PAUSE,
+  QUEUE_RESUME,
+  UPDATE_VOLUME,
+} from './actions'
 
-const QUEUE_ADD = 'QUEUE_ADD'
-const QUEUE_REMOVE = 'QUEUE_REMOVE'
-const QUEUE_SKIP = 'QUEUE_SKIP'
-const QUEUE_PAUSE = 'QUEUE_PAUSE'
-const QUEUE_RESUME = 'QUEUE_RESUME'
-
-const UPDATE_VOLUME = 'UPDATE_VOLUME'
-
-const reducer = (state, action) => {
+export default (state, action) => {
   console.log('in reducer')
   console.log('action is')
   console.log(action)
@@ -39,15 +37,4 @@ const reducer = (state, action) => {
     default:
       console.log('INVALID ACTION TYPE ' + action.type)
   }
-}
-
-export default reducer
-
-export {
-  QUEUE_ADD,
-  QUEUE_REMOVE,
-  QUEUE_SKIP,
-  QUEUE_PAUSE,
-  QUEUE_RESUME,
-  UPDATE_VOLUME,
 }

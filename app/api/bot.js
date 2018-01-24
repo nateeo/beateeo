@@ -3,7 +3,7 @@ import ytdl from 'ytdl-core'
 import path from 'path'
 import { ipcMain } from 'electron'
 
-import { createMainStore } from '../utils/stateHelpers'
+import { createMainStore } from '../state/store'
 import config from './config.json'
 import commands from './commands.js'
 

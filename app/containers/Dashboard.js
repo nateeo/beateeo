@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { connect } from '../utils/stateHelpers'
+
+import { connect } from '../state/connect'
+
+import {
+  QUEUE_ADD,
+  QUEUE_REMOVE,
+  QUEUE_SKIP,
+  QUEUE_PAUSE,
+  QUEUE_RESUME,
+  UPDATE_VOLUME,
+} from '../state/actions'
 
 const Layout = styled.div`
   background-color: black;
@@ -11,7 +21,6 @@ const Layout = styled.div`
 
 class Dashboard extends Component {
   render() {
-    console.log(this.props)
     return (
       <Layout>
         <div onClick={this.props.updateVolume}>some dashboard</div>
@@ -26,10 +35,28 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateVolume: () =>
+  add: song =>
     dispatch({
-      type: 'UPDATE_VOLUME',
-      payload: 0.3,
+      type: QUEUE_ADD,
+      payload: song,
+    }),
+  remove: song =>
+    dispatch({
+      type: QUEUE_REMOVE,
+      payload: song,
+    }),
+  skip: song =>
+    dispatch({
+      type: QUEUE_SKIP,
+      payload: song,
+    }),
+  pause: () =>
+    dispatch({
+      type: QUEUE_PAUSE,
+    }),
+  pause: () =>
+    dispatch({
+      type: QUEUE_RESUME,
     }),
 })
 

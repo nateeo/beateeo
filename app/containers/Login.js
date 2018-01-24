@@ -5,8 +5,8 @@ import { ipcRenderer } from 'electron'
 
 import Input from '../components/Input'
 import Button from '../components/Button'
-import history from '../utils/history'
 import colors from '../constants/colors'
+import history from '../utils/history'
 
 const Container = styled.div`
   background-color: white;
