@@ -1,16 +1,13 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import { createBrowserHistory } from 'history'
 
 import Root from './containers/Root'
 import './app.global.css'
 
-const history = createBrowserHistory()
-
 render(
   <AppContainer>
-    <Root history={history} />
+    <Root />
   </AppContainer>,
   document.getElementById('root')
 )
@@ -20,7 +17,7 @@ if (module.hot) {
     const NextRoot = require('./containers/Root') // eslint-disable-line global-require
     render(
       <AppContainer>
-        <NextRoot history={history} />
+        <NextRoot />
       </AppContainer>,
       document.getElementById('root')
     )

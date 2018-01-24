@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 
 import { createRendererStore } from '../utils/stateHelpers'
 import Provider from './Provider'
@@ -7,12 +7,12 @@ import Routes from '../routes'
 
 const store = createRendererStore()
 
-const Root = ({ history }) => {
+const Root = () => {
   return (
     <Provider store={store}>
-      <Router history={history}>
+      <BrowserRouter>
         <Routes />
-      </Router>
+      </BrowserRouter>
     </Provider>
   )
 }
