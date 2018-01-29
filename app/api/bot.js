@@ -6,6 +6,7 @@ import { ipcMain } from 'electron'
 import { createMainStore } from '../state/store'
 import config from './config.json'
 import commands from './commands.js'
+import { setupListeners } from './messageCommandHandler'
 
 const client = new Discord.Client()
 const token = config.token
@@ -71,6 +72,7 @@ const setup = browserWindow => {
     store = createMainStore(browserWindow)
   }
   ipcMain.on('login', initialize)
+  ipcMain.on('start', () => setupListeners(client))
 }
 
 export default setup

@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
+import { ipcRenderer } from 'electron'
 
-import { connect } from '../state/connect'
+import connect from '../state/connect'
 
 import {
   QUEUE_ADD,
@@ -20,10 +21,13 @@ const Layout = styled.div`
 `
 
 class Dashboard extends Component {
+  handleMessages = () => {
+    ipcRenderer.send('start')
+  }
   render() {
     return (
       <Layout>
-        <div onClick={this.props.updateVolume}>some dashboard</div>
+        <div onClick={this.handleMessages}>some dashboard</div>
         <div>current volume: {this.props.volume}</div>
       </Layout>
     )

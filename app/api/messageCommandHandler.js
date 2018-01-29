@@ -1,4 +1,5 @@
 // intialise listeners to handle message commands
+import commands from './commands'
 
 const setupListeners = client => {
   client.on('ready', () => {

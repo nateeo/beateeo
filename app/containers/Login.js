@@ -43,7 +43,7 @@ const Login = styled.div`
 
 export default class Home extends Component {
   state = {
-    token: '',
+    token: 'MTgzMjIyOTk0OTM4NjI2MDQ4.DET5Kw.F7zb_CcSB8YFW_vHELViIACbivk',
     loading: false,
     error: false,
   }
@@ -91,7 +91,11 @@ export default class Home extends Component {
             value={this.state.token}
             onChange={this.handleTokenChange}
           />
-          <Button color={colors.primary} onClick={this.handleLogin}>
+          <Button
+            color={colors.primary}
+            onClick={this.handleLogin}
+            loading={this.state.loading}
+          >
             Login
           </Button>
         </Login>

@@ -17,12 +17,14 @@ const Layout = styled.div`
   border-radius: 4px;
   color: white;
   justify-content: center;
+  opacity: ${props => (props.loading ? 0.5 : 1)};
   align-items: center;
+  pointer-events: ${props => (props.loading ? 'none' : 'all')};
   cursor: pointer;
   user-select: none;
   font-size: 16px;
   transition: all 70ms ease-out;
-  background: ${props => props.color};
+  background: ${props => (props.loading ? '#737f8d' : props.color)};
   &:hover {
     background: ${props => props.colorShade};
   }
