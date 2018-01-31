@@ -21,7 +21,7 @@ const Container = styled.div`
 
 const Title = styled.div`
   font-size: 48px;
-  font-family: 'Fredoka One', sans-serif;
+  font-family: 'Raleway', sans-serif;
   color: white;
   user-select: none;
   padding: 15px 30px;

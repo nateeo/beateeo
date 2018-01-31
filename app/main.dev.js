@@ -4,6 +4,7 @@ import MenuBuilder from './menu'
 import setup from './api/bot'
 
 let mainWindow = null
+let loaded = false
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support')
@@ -66,8 +67,10 @@ app.on('ready', async () => {
     }
     mainWindow.show()
     mainWindow.focus()
-
-    setup(mainWindow)
+    if (!loaded) {
+      setup(mainWindow)
+      loaded = true
+    }
   })
 
   mainWindow.on('closed', () => {

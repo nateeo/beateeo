@@ -9843,13 +9843,13 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typeface-fredoka-one@^0.0.44:
-  version "0.0.44"
-  resolved "https://registry.yarnpkg.com/typeface-fredoka-one/-/typeface-fredoka-one-0.0.44.tgz#fa48dcd73ca6586641aec8b2d3af804cf249ecf5"
-
 typeface-open-sans@0.0.45:
   version "0.0.45"
   resolved "https://registry.yarnpkg.com/typeface-open-sans/-/typeface-open-sans-0.0.45.tgz#cd4700eb9ed4c83f5fe95ef0540b4053110bfccf"
+
+typeface-raleway@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/typeface-raleway/-/typeface-raleway-0.0.54.tgz#f166c517becc81f34d14e72736d28b8923c79c65"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"

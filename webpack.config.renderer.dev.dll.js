@@ -176,7 +176,7 @@ export default merge.smart(baseConfig, {
     renderer: (
       Object
         .keys(dependencies || {})
-        .filter(dependency => dependency !== 'font-awesome')
+        .filter(dependency => dependency !== 'typeface-raleway' || dependency !== 'typeface-open-sans')
     )
   },
 

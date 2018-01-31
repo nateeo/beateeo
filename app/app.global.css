@@ -1,3 +1,6 @@
+@import '~typeface-open-sans';
+@import '~typeface-raleway';
+
 body {
   position: relative;
   color: black;
