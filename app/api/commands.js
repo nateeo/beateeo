@@ -48,7 +48,7 @@ const play = (message, song) => {
   if (!YOUTUBE_REGEX.test(url)) {
     return message.reply('Sorry, I currently only accept valid youtube urls :(')
   }
-  if (queue.length == 0) {
+  if (!currentDispatcher) {
     queue.push(url)
     playNext()
   } else {

@@ -23,16 +23,18 @@ const Layout = styled.div`
   color: white;
 `
 
-const PlaylistContainer = styled.div`
-  border: 1px solid black;
-  padding: 10px;
-  transition: background-color 200ms ease-out;
-`
+const PlaylistContainer = styled.div``
 
 const Playlist = styled.div`
-  background-color: ${props => (props.isDragging ? 'lightblue' : 'grey')};
+  background-color: ${props => (props.isDragging ? '#626467' : '#8E9093')};
+  transition: background-color 100ms ease-out;
+  border-radius: 4px;
   padding: 10px;
   width: 250px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `
 
 const reorder = (list, startIndex, endIndex) => {
