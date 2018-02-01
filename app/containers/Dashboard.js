@@ -7,14 +7,7 @@ import PlaylistEntry from '../components/PlaylistEntry'
 
 import connect from '../state/connect'
 
-import {
-  QUEUE_ADD,
-  QUEUE_REMOVE,
-  QUEUE_SKIP,
-  QUEUE_PAUSE,
-  QUEUE_RESUME,
-  UPDATE_VOLUME,
-} from '../state/actions'
+import { queueAdd, queueReorder } from '../state/actions'
 
 const Layout = styled.div`
   background-color: black;
@@ -67,9 +60,7 @@ class Dashboard extends Component {
       result.destination.index
     )
 
-    this.setState({
-      queue,
-    })
+    this.props.queueReorder(queue)
   }
 
   render() {
@@ -83,7 +74,7 @@ class Dashboard extends Component {
                   innerRef={provided.innerRef}
                   isDragging={snapshot.isDraggingOver}
                 >
-                  {this.state.queue.map((item, index) => (
+                  {this.props.queue.map((item, index) => (
                     <PlaylistEntry
                       id={item.id}
                       draggableId={item.id}
@@ -109,6 +100,9 @@ const mapStateToProps = state => ({
   isPlaying: state.isPlaying,
 })
 
-const mapDispatchToProps = dispatch => ({})
+const mapDispatchToProps = dispatch => ({
+  queueAdd,
+  queueReorder,
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

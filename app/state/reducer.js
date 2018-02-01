@@ -2,6 +2,7 @@ import {
   QUEUE_ADD,
   QUEUE_REMOVE,
   QUEUE_SKIP,
+  QUEUE_REORDER,
   QUEUE_PAUSE,
   QUEUE_RESUME,
   UPDATE_VOLUME,
@@ -23,6 +24,12 @@ export default (state, action) => {
       return {
         ...state,
         queue: state.queue.slice(1),
+      }
+      break
+    case QUEUE_REORDER:
+      return {
+        ...state,
+        queue: payload,
       }
       break
     case UPDATE_VOLUME:

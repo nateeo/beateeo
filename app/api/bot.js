@@ -6,19 +6,16 @@ import { ipcMain } from 'electron'
 import { createMainStore } from '../state/store'
 import config from './config.json'
 import commands from './commands.js'
-import { setupListeners } from './messageCommandHandler'
+import setupListeners from './messageCommandHandler'
 
 const client = new Discord.Client()
 const token = config.token
 const owner = config.owner
 const prefix = config.prefix || '!'
 
-let state = {
-  volume: 0.15,
-  queue: [],
-}
-
+// state management
 let store
+let previousState
 
 const getOwner = () => {
   client.guilds.forEach(guild => {
@@ -45,34 +42,46 @@ const getOwner = () => {
 let loggingIn = false
 
 const initialize = (event, inputToken) => {
-  if (loggingIn) {
-    console.log('login request already in-flight')
-    return
-  }
-  console.log('logging in...')
+  if (loggingIn) return
   loggingIn = true
   const t = inputToken ? inputToken : token
-  console.log('trying to login with ' + t)
   client.login(t).then(
     token => {
       event.sender.send('login', 'success', token)
-      console.log('succesfully logged in')
       loggingIn = false
     },
     e => {
       event.sender.send('login', 'error', e)
-      console.log('error logging in')
       loggingIn = false
     }
   )
 }
 
+// map new state to application effects
+const onStoreUpdate = () => {
+  state = store.getState()
+  if (previousState.queue != state.queue) {
+  } else if (previousState.volume != state.volume) {
+  } else if (previousState.isPlaying != state.isPlaying) {
+  } else if (previousState.volume != state.volume) {
+  } else if (previousState.messageEnabled != state.messageEnabled) {
+  }
+  previousState = state
+}
+
 const setup = browserWindow => {
   if (!store) {
+    console.log('setting up')
     store = createMainStore(browserWindow)
+    previousState = store.getState()
+    store.subscribe(onStoreUpdate)
+
+    setupListeners(client)
+
+    ipcMain.on('login', initialize)
+    ipcMain.on('start', () => setupListeners(client))
+    process.on('SIGINT', () => client.destroy())
   }
-  ipcMain.on('login', initialize)
-  ipcMain.on('start', () => setupListeners(client))
 }
 
 export default setup

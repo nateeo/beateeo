@@ -7,7 +7,7 @@ const initialState = {
   queue: [],
   volume: 0.15,
   isPlaying: true,
-  messageCommandsEnabled: false,
+  messageEnabled: true,
 }
 
 const createStore = browserWindow => {

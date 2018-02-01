@@ -1,3 +1,5 @@
+// shared api for renderer and main, validate user action and dispatch correct action
+
 const Discord = require('discord.js')
 const ytdl = require('ytdl-core')
 
