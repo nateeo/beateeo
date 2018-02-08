@@ -82,6 +82,7 @@ class Dashboard extends Component {
                     />
                   ))}
                   {provided.placeholder}
+                  {!this.props.queue.length && 'Playlist is empty'}
                 </Playlist>
               )}
             </Droppable>
