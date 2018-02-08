@@ -16,6 +16,8 @@ const createStore = browserWindow => {
   const notify = browserWindow
     ? browserWindow.webContents.send
     : ipcRenderer.send
+  console.log('notify is ')
+  console.log(notify)
   const update = action => {
     state = reducer(state, action)
     subscribers.forEach(handler => handler())

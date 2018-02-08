@@ -3,12 +3,11 @@ import {
   QUEUE_ADD,
   QUEUE_REMOVE,
   QUEUE_REORDER,
+  QUEUE_SKIP,
   QUEUE_PAUSE,
   QUEUE_RESUME,
   UPDATE_VOLUME,
 } from '../state/actions'
-
-const state = () => store.getState()
 
 let id = 0
 
@@ -26,31 +25,44 @@ export default class Commander {
     this.onError = onError
   }
 
-  queueAdd = song => {
-    song.id = id
+  getState = () => {
+    return this.store.getState()
+  }
+
+  queueAdd = args => {
+    console.log(args)
+    let songObj
+    const song = args[0]
+    if (typeof song === 'string') {
+      songObj = {
+        url: song,
+        id: id,
+      }
+    }
     id++
-    store.dispatch({ type: QUEUE_ADD, payload: song })
+    this.store.dispatch({ type: QUEUE_ADD, payload: songObj })
   }
 
-  queueRemove = song => {
-    store.dispatch({ type: QUEUE_REMOVE, payload: song })
+  queueRemove = args => {
+    this.store.dispatch({ type: QUEUE_REMOVE, payload: song })
   }
 
-  queueSkip = () => {
-    if (state().queue.length > 0) store.dispatch({ type: QUEUE_SKIP })
+  queueSkip = args => {
+    if (this.getState().queue.length > 0)
+      this.store.dispatch({ type: QUEUE_SKIP })
   }
 
-  queuePause = () => {
-    if (state().isPlaying) store.dispatch({ type: QUEUE_PAUSE })
+  queuePause = args => {
+    if (this.getState().isPlaying) this.store.dispatch({ type: QUEUE_PAUSE })
   }
 
-  queueResume = () => {
-    if (!state().isPlaying) store.dispatch({ type: QUEUE_RESUME })
+  queueResume = args => {
+    if (!this.getState().isPlaying) this.store.dispatch({ type: QUEUE_RESUME })
   }
 
-  updateVolume = volume => {
+  updateVolume = args => {
     if (volume > 0 && volume <= 100) {
-      store.dispatch({ type: UPDATE_VOLUME, payload: volume })
+      this.store.dispatch({ type: UPDATE_VOLUME, payload: volume })
     } else {
       onError('Volume must be between 0 and 100')
     }

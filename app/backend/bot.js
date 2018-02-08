@@ -7,8 +7,8 @@ import { ipcMain } from 'electron'
 
 import { createMainStore } from '../state/store'
 import config from './config.json'
-import commands from './commands.js'
-import setupListeners from './messageCommandHandler'
+import { messageCommands } from '../shared/commands'
+import Commander from '../shared/commands'
 
 const client = new Discord.Client()
 const token = config.token
@@ -35,6 +35,12 @@ const onDispatcherEnd = () => {
 }
 
 const play = () => {
+  if (!store.getState().queue.length) return
+  const song = store.getState().queue[0].url
+  console.log('song is ' + song)
+  if (!YOUTUBE_REGEX.test(song)) {
+    return message.reply('Sorry, I currently only accept valid youtube urls :(')
+  }
   if (currentDispatcher) currentDispatcher.end()
   voiceChannel.join().then(connection => {
     channel.send('now playing')
@@ -43,19 +49,19 @@ const play = () => {
       seek: 0,
       volume: store.getState().volume,
     })
+    currentDispatcher = dispatcher
+    dispatcher.on('info', console.log)
+    dispatcher.on('error', console.error)
+    dispatcher.on('end', onDispatcherEnd)
   })
-  currentDispatcher = dispatcher
-  dispatcher.on('info', console.log)
-  dispatcher.on('error', console.error)
-  dispatcher.on('end', onDispatcherEnd)
 }
 
 // volume
 
 // map new state to application effects
 const onStoreUpdate = () => {
-  console.log('onStoreUpdate')
-  state = store.getState()
+  console.log('<<onStoreUpdate>>')
+  const state = store.getState()
   if (previousState.queue != state.queue) {
     console.log('playing the new song')
     play()
@@ -81,7 +87,6 @@ const getOwner = () => {
           if (!channel.members) return
           channel.members.forEach(member => {
             if (member.id == owner) {
-              state.guildOwner = member
               console.log('Found owner!')
               if (member.voiceChannel) {
                 console.log('Owner is in a voice channel, joining')
@@ -97,11 +102,33 @@ const getOwner = () => {
 
 const commanderError = msg => lastMessage.reply(msg)
 
+const setupMessageListener = () => console.log('setting up message listeners')
+client.on('message', async message => {
+  const content = message.content
+  if (content.startsWith(prefix) && content.length > prefix.length) {
+    lastMessage = message
+    channel = message.channel
+    voiceChannel = message.member.voiceChannel
+
+    const input = content.split(' ')
+    const command = input[0].substring(prefix.length)
+    const args = input.slice(1)
+
+    const action = messageCommands[command]
+    if (action) {
+      commander[action.type](args.slice(0, action.args))
+    } else {
+      message.reply('Unknown command.')
+    }
+  }
+})
+
 // initialising and setting up
 
 let loggingIn = false
 
 const initialize = (event, inputToken) => {
+  console.log('trying to login with ' + inputToken)
   if (loggingIn) return
   loggingIn = true
   const t = inputToken ? inputToken : token
@@ -109,6 +136,8 @@ const initialize = (event, inputToken) => {
     token => {
       event.sender.send('login', 'success', token)
       loggingIn = false
+      getOwner()
+      setupMessageListener()
     },
     e => {
       event.sender.send('login', 'error', e)
@@ -116,27 +145,6 @@ const initialize = (event, inputToken) => {
     }
   )
 }
-
-const setupMessageListener = () =>
-  client.on('message', async message => {
-    content = message.content
-    if (content.startsWith(prefix) && content.length > prefix.length) {
-      lastMessage = message
-      channel = message.channel
-      voiceChannel = message.member.voiceChannel
-
-      input = content.split(' ')
-      command = input[0].substring(prefix.length)
-      args = input.slice(1)
-
-      action = messageCommands[command]
-      if (action) {
-        commander[action.type](args.slice(0, action.args))
-      } else {
-        message.reply('Unknown command.')
-      }
-    }
-  })
 
 const setup = browserWindow => {
   if (!store) {

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import MenuBuilder from './menu'
 
-import setup from './api/bot'
+import setup from './backend/bot'
 
 let mainWindow = null
 let loaded = false
