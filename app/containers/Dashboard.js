@@ -39,10 +39,6 @@ const reorder = (list, startIndex, endIndex) => {
 }
 
 class Dashboard extends Component {
-  state = {
-    queue: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
-  }
-
   componentDidUpdate = () => {
     console.log(this.state)
   }

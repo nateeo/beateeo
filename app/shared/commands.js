@@ -9,6 +9,8 @@ import {
   UPDATE_VOLUME,
 } from '../state/actions'
 
+const YOUTUBE_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
+
 let id = 0
 
 export const messageCommands = {
@@ -30,17 +32,18 @@ export default class Commander {
   }
 
   queueAdd = args => {
-    console.log(args)
     let songObj
     const song = args[0]
-    if (typeof song === 'string') {
+    if (typeof song === 'string' && YOUTUBE_REGEX.test(song)) {
       songObj = {
         url: song,
         id: id,
       }
+      id++
+      this.store.dispatch({ type: QUEUE_ADD, payload: songObj })
+    } else {
+      this.onError('Invalid song')
     }
-    id++
-    this.store.dispatch({ type: QUEUE_ADD, payload: songObj })
   }
 
   queueRemove = args => {

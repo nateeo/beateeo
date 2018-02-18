@@ -15,8 +15,6 @@ const token = config.token
 const owner = config.owner
 const prefix = config.prefix || '!'
 
-const YOUTUBE_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
-
 // state management
 let commander
 
@@ -38,13 +36,11 @@ const play = () => {
   if (!store.getState().queue.length) return
   const song = store.getState().queue[0].url
   console.log('song is ' + song)
-  if (!YOUTUBE_REGEX.test(song)) {
-    return message.reply('Sorry, I currently only accept valid youtube urls :(')
-  }
-  if (currentDispatcher) currentDispatcher.end()
   voiceChannel.join().then(connection => {
     channel.send('now playing')
+    console.log(song)
     const stream = ytdl(song, { filter: 'audioonly' })
+    console.log(stream)
     const dispatcher = connection.playStream(stream, {
       seek: 0,
       volume: store.getState().volume,
@@ -52,7 +48,8 @@ const play = () => {
     currentDispatcher = dispatcher
     dispatcher.on('info', console.log)
     dispatcher.on('error', console.error)
-    dispatcher.on('end', onDispatcherEnd)
+    console.log(dispatcher.toString())
+    //dispatcher.on('end', onDispatcherEnd)
   })
 }
 

@@ -14,17 +14,14 @@ const createStore = browserWindow => {
   let state = initialState
   const subscribers = []
   const notify = browserWindow
-    ? browserWindow.webContents.send
+    ? browserWindow.webContents.send.bind(browserWindow.webContents)
     : ipcRenderer.send
-  console.log('notify is ')
-  console.log(notify)
   const update = action => {
     state = reducer(state, action)
     subscribers.forEach(handler => handler())
   }
   const store = {
     dispatch: action => {
-      console.log(`dispatching ${action.type} event`)
       update(action)
       notify(STATE_CHANNEL, action)
     },

@@ -9,8 +9,7 @@ import {
 } from './actions'
 
 export default (state, action) => {
-  console.log('in reducer')
-  console.log('action is')
+  console.log('ACTION')
   console.log(action)
   const payload = action.payload
   switch (action.type) {
