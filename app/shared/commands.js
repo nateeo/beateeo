@@ -9,6 +9,8 @@ import {
   UPDATE_VOLUME,
 } from '../state/actions'
 
+import ytdl from 'ytdl-core'
+
 const YOUTUBE_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
 
 let id = 0
@@ -34,13 +36,21 @@ export default class Commander {
   queueAdd = args => {
     let songObj
     const song = args[0]
-    if (typeof song === 'string' && YOUTUBE_REGEX.test(song)) {
+    if (typeof song === 'string' && ytdl.validateURL(song)) {
       songObj = {
         url: song,
         id: id,
       }
-      id++
-      this.store.dispatch({ type: QUEUE_ADD, payload: songObj })
+      ytdl.getInfo(song, (error, info) => {
+        if (!error) {
+          songObj.title = info.title
+          songObj.time = info.length_seconds
+          this.store.dispatch({ type: QUEUE_ADD, payload: songObj })
+          id++
+        } else {
+          console.log('ytdl error: ' + error.message)
+        }
+      })
     } else {
       this.onError('Invalid song')
     }

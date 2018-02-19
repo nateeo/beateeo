@@ -6,7 +6,7 @@ const STATE_CHANNEL = 'state'
 const initialState = {
   queue: [],
   volume: 0.15,
-  isPlaying: true,
+  isPlaying: false,
   messageEnabled: true,
 }
 
@@ -18,6 +18,10 @@ const createStore = browserWindow => {
     : ipcRenderer.send
   const update = action => {
     state = reducer(state, action)
+    if (!state) {
+      console.log('YOU FUCKED UP')
+      console.log(action.type.toString())
+    }
     subscribers.forEach(handler => handler())
   }
   const store = {

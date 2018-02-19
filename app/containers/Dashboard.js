@@ -39,10 +39,6 @@ const reorder = (list, startIndex, endIndex) => {
 }
 
 class Dashboard extends Component {
-  componentDidUpdate = () => {
-    console.log(this.state)
-  }
-
   handleMessages = () => {
     ipcRenderer.send('start')
   }
@@ -71,11 +67,7 @@ class Dashboard extends Component {
                   isDragging={snapshot.isDraggingOver}
                 >
                   {this.props.queue.map((item, index) => (
-                    <PlaylistEntry
-                      id={item.id}
-                      draggableId={item.id}
-                      index={index}
-                    />
+                    <PlaylistEntry index={index} song={item} />
                   ))}
                   {provided.placeholder}
                   {!this.props.queue.length && 'Playlist is empty'}

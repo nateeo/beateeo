@@ -28,19 +28,18 @@ let lastMessage
 
 // play functions
 
-const onDispatcherEnd = () => {
-  commander.queueSkip()
+const onDispatcherEnd = e => {
+  // if the reason for ending is skipping, this has already been handled
+  if (e !== 'skip') commander.queueSkip()
 }
 
 const play = () => {
-  if (!store.getState().queue.length) return
-  const song = store.getState().queue[0].url
-  console.log('song is ' + song)
+  if (currentDispatcher) currentDispatcher.end('skip')
+  if (store.getState().queue.length == 0) return
+  const song = store.getState().queue[0]
   voiceChannel.join().then(connection => {
-    channel.send('now playing')
-    console.log(song)
-    const stream = ytdl(song, { filter: 'audioonly' })
-    console.log(stream)
+    if (lastMessage) lastMessage.delete()
+    const stream = ytdl(song.url, { filter: 'audioonly' })
     const dispatcher = connection.playStream(stream, {
       seek: 0,
       volume: store.getState().volume,
@@ -48,8 +47,7 @@ const play = () => {
     currentDispatcher = dispatcher
     dispatcher.on('info', console.log)
     dispatcher.on('error', console.error)
-    console.log(dispatcher.toString())
-    //dispatcher.on('end', onDispatcherEnd)
+    dispatcher.on('end', onDispatcherEnd)
   })
 }
 
@@ -59,14 +57,14 @@ const play = () => {
 const onStoreUpdate = () => {
   console.log('<<onStoreUpdate>>')
   const state = store.getState()
+  console.log('new state')
+  console.log(state)
   if (previousState.queue != state.queue) {
     console.log('playing the new song')
     play()
   } else if (previousState.volume != state.volume) {
-    console.log('updating volume')
     channel.send('Updating volume to ' + state.volume)
   } else if (previousState.isPlaying != state.isPlaying) {
-    console.log('updating pause/play') // guaranteed to be different
     if (state.isPlaying) {
       currentDispatcher.pause()
     } else {

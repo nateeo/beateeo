@@ -13,8 +13,8 @@ const Item = styled.div`
   margin: 5px 0;
 `
 
-const PlaylistEntry = props => (
-  <Draggable key={props.id} draggableId={props.id} index={props.index}>
+const PlaylistEntry = ({ song, index }) => (
+  <Draggable key={song.id} draggableId={song.id} index={index}>
     {(provided, snapshot) => (
       <Container>
         <Item
@@ -23,7 +23,7 @@ const PlaylistEntry = props => (
           {...provided.dragHandleProps}
           isDragging={snapshot.isDragging}
         >
-          {props.id} Playlist content goes here
+          {song.title}
         </Item>
         {provided.placeholder}
       </Container>

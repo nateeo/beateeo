@@ -9,7 +9,9 @@ import {
 } from './actions'
 
 export default (state, action) => {
-  console.log('ACTION')
+  if (!action) return state
+  console.log('REDUCER <prevState, action>')
+  console.log(state)
   console.log(action)
   const payload = action.payload
   switch (action.type) {
@@ -20,10 +22,13 @@ export default (state, action) => {
       }
       break
     case QUEUE_SKIP:
-      return {
+      const newState = {
         ...state,
         queue: state.queue.slice(1),
       }
+      console.log('new')
+      console.log(newState.toString())
+      return newState
       break
     case QUEUE_REORDER:
       return {
@@ -32,15 +37,13 @@ export default (state, action) => {
       }
       break
     case UPDATE_VOLUME:
-      const newState = {
+      return {
         ...state,
         volume: payload,
       }
-      console.log('new state')
-      console.log(newState)
-      return newState
       break
     default:
       console.log('INVALID ACTION TYPE ' + action.type)
+      return state
   }
 }
