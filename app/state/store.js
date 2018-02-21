@@ -6,7 +6,7 @@ const STATE_CHANNEL = 'state'
 const initialState = {
   queue: [],
   volume: 0.15,
-  isPlaying: false,
+  isPlaying: true,
   messageEnabled: true,
 }
 
@@ -22,7 +22,7 @@ const createStore = browserWindow => {
       console.log('YOU FUCKED UP')
       console.log(action.type.toString())
     }
-    subscribers.forEach(handler => handler())
+    subscribers.forEach(handler => handler(action.type))
   }
   const store = {
     dispatch: action => {

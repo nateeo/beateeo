@@ -52,6 +52,13 @@ export default class Home extends Component {
     ipcRenderer.on('login', this.handleMainLoginResponse)
   }
 
+  componentDidUpdate = (prevProps, prevState) => {
+    if (!prevState.loading && this.state.loading) {
+      // this is a workaround to ipcRenderer.send freezing the renderer
+      setTimeout(() => ipcRenderer.send('login', this.state.token), 0)
+    }
+  }
+
   handleTokenChange = e => {
     this.setState({
       token: e.target.value.trim(),
@@ -59,8 +66,9 @@ export default class Home extends Component {
   }
 
   handleLogin = () => {
-    this.setState({ loading: true })
-    ipcRenderer.send('login', this.state.token)
+    this.setState({
+      loading: true,
+    })
   }
 
   handleMainLoginResponse = (event, status, response) => {

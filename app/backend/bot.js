@@ -9,6 +9,13 @@ import { createMainStore } from '../state/store'
 import config from './config.json'
 import { messageCommands } from '../shared/commands'
 import Commander from '../shared/commands'
+import {
+  QUEUE_RESUME,
+  QUEUE_PAUSE,
+  UPDATE_VOLUME,
+  QUEUE_SKIP,
+  QUEUE_ADD,
+} from '../state/actions'
 
 const client = new Discord.Client()
 const token = config.token
@@ -30,6 +37,7 @@ let lastMessage
 
 const onDispatcherEnd = e => {
   // if the reason for ending is skipping, this has already been handled
+  console.log('onDispatcherEnd: ' + e)
   if (e !== 'skip') commander.queueSkip()
 }
 
@@ -37,8 +45,11 @@ const play = () => {
   if (currentDispatcher) currentDispatcher.end('skip')
   if (store.getState().queue.length == 0) return
   const song = store.getState().queue[0]
+  store.dispatch(QUEUE_RESUME)
   voiceChannel.join().then(connection => {
+    // testing
     if (lastMessage) lastMessage.delete()
+    channel.send(`now playing: ${song.title}`)
     const stream = ytdl(song.url, { filter: 'audioonly' })
     const dispatcher = connection.playStream(stream, {
       seek: 0,
@@ -54,21 +65,27 @@ const play = () => {
 // volume
 
 // map new state to application effects
-const onStoreUpdate = () => {
+const onStoreUpdate = action => {
   console.log('<<onStoreUpdate>>')
   const state = store.getState()
   console.log('new state')
   console.log(state)
-  if (previousState.queue != state.queue) {
-    console.log('playing the new song')
-    play()
-  } else if (previousState.volume != state.volume) {
-    channel.send('Updating volume to ' + state.volume)
-  } else if (previousState.isPlaying != state.isPlaying) {
-    if (state.isPlaying) {
-      currentDispatcher.pause()
-    } else {
+  switch (action) {
+    case QUEUE_SKIP:
+      play()
+      break
+    case QUEUE_ADD:
+      if (state.queue.length === 1 && state.isPlaying) play()
+      break
+    case UPDATE_VOLUME:
+      if (currentDispatcher) currentDispatcher.setVolume(state.volume)
+      break
+  }
+  if (state.isPlaying != previousState.isPlaying) {
+    if (state.isPlaying && currentDispatcher) {
       currentDispatcher.resume()
+    } else if (!state.isPlaying && currentDispatcher) {
+      currentDispatcher.pause()
     }
   }
   previousState = state
