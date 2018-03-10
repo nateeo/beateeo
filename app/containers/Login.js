@@ -55,7 +55,7 @@ export default class Home extends Component {
   componentDidUpdate = (prevProps, prevState) => {
     if (!prevState.loading && this.state.loading) {
       // this is a workaround to ipcRenderer.send freezing the renderer
-      setTimeout(() => ipcRenderer.send('login', this.state.token), 0)
+      setTimeout(() => ipcRenderer.send('login', this.state.token), 50)
     }
   }
 

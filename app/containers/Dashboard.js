@@ -47,11 +47,12 @@ class Dashboard extends Component {
     if (!result.destination) return
 
     const queue = reorder(
-      this.state.queue,
+      this.props.queue,
       result.source.index,
       result.destination.index
     )
-
+    console.log('re-ordering the queue')
+    console.log(this.props.queueReorder)
     this.props.queueReorder(queue)
   }
 

@@ -10,23 +10,25 @@ import {
 } from '../state/actions'
 
 import ytdl from 'ytdl-core'
+import { getInfo } from 'ytdl-getinfo'
 
 const YOUTUBE_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
 
 let id = 0
 
 export const messageCommands = {
-  play: { type: 'queueAdd', args: 1 },
+  play: { type: 'queueAdd', args: -1 },
   skip: { type: 'queueSkip', args: 0 },
   pause: { type: 'queuePause', args: 0 },
   resume: { type: 'queueResume', args: 0 },
   volume: { type: 'updateVolume', args: 1 },
+  queue: { type: 'printQueue', args: 0 },
 }
 
 export default class Commander {
-  constructor(store, onError) {
+  constructor(store, message) {
     this.store = store
-    this.onError = onError
+    this.message = message
   }
 
   getState = () => {
@@ -35,25 +37,38 @@ export default class Commander {
 
   queueAdd = args => {
     let songObj
-    const song = args[0]
-    if (typeof song === 'string' && ytdl.validateURL(song)) {
+    let song = args[0]
+    if (ytdl.validateURL(song)) {
       songObj = {
         url: song,
         id: id,
       }
-      ytdl.getInfo(song, (error, info) => {
-        if (!error) {
-          songObj.title = info.title
-          songObj.time = info.length_seconds
-          this.store.dispatch({ type: QUEUE_ADD, payload: songObj })
-          id++
-        } else {
-          console.log('ytdl error: ' + error.message)
-        }
-      })
+      this.onQueueAdd(songObj)
     } else {
-      this.onError('Invalid song')
+      const searchSong = args.join(' ')
+      console.log('search is ' + searchSong)
+      getInfo(searchSong).then(info => {
+        songObj = {
+          url: 'https://www.youtube.com/watch?v=' + info.items[0].id,
+          id: id,
+        }
+        this.onQueueAdd(songObj)
+      })
     }
+  }
+
+  onQueueAdd = songObj => {
+    console.log(songObj)
+    ytdl.getInfo(songObj.url, (error, info) => {
+      if (!error) {
+        songObj.title = info.title
+        songObj.time = info.length_seconds
+        this.store.dispatch({ type: QUEUE_ADD, payload: songObj })
+        id++
+      } else {
+        console.log('ytdl error: ' + error.message)
+      }
+    })
   }
 
   queueRemove = args => {
@@ -77,7 +92,15 @@ export default class Commander {
     if (volume > 0 && volume <= 100) {
       this.store.dispatch({ type: UPDATE_VOLUME, payload: volume })
     } else {
-      onError('Volume must be between 0 and 100')
+      message('Volume must be between 0 and 100')
     }
+  }
+
+  printQueue = args => {
+    let queue = 'Song queue:'
+    this.getState().queue.forEach((song, index) => {
+      queue += '\n' + index + ': ' + song.title
+    })
+    this.message(queue)
   }
 }

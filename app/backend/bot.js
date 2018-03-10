@@ -112,7 +112,7 @@ const getOwner = () => {
   })
 }
 
-const commanderError = msg => lastMessage.reply(msg)
+const commanderMessage = msg => channel.send(msg)
 
 const setupMessageListener = () => console.log('setting up message listeners')
 client.on('message', async message => {
@@ -128,7 +128,9 @@ client.on('message', async message => {
 
     const action = messageCommands[command]
     if (action) {
-      commander[action.type](args.slice(0, action.args))
+      commander[action.type](
+        action.args >= 0 ? args.slice(0, action.args) : args
+      )
     } else {
       message.reply('Unknown command.')
     }
@@ -162,7 +164,7 @@ const setup = browserWindow => {
   if (!store) {
     console.log('setting up')
     store = createMainStore(browserWindow)
-    commander = new Commander(store, commanderError)
+    commander = new Commander(store, commanderMessage)
     previousState = store.getState()
     store.subscribe(onStoreUpdate)
 

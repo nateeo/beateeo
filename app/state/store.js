@@ -19,7 +19,7 @@ const createStore = browserWindow => {
   const update = action => {
     state = reducer(state, action)
     if (!state) {
-      console.log('YOU FUCKED UP')
+      console.log('INVALID STATE PRODUCED')
       console.log(action.type.toString())
     }
     subscribers.forEach(handler => handler(action.type))

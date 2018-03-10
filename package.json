@@ -210,7 +210,8 @@
     "styled-components": "^2.4.0",
     "tweetnacl": "^1.0.0",
     "youtube-search": "^1.0.10",
-    "ytdl-core": "0.20.1"
+    "ytdl-core": "0.20.1",
+    "ytdl-getinfo": "^1.0.5"
   },
   "devEngines": {
     "node": ">=7.x",
