@@ -42,10 +42,15 @@ const onDispatcherEnd = e => {
 }
 
 const play = () => {
-  if (currentDispatcher) currentDispatcher.end('skip')
-  if (store.getState().queue.length == 0) return
+  if (currentDispatcher) {
+    console.log('currentDispatcher exists')
+    console.log(currentDispatcher)
+    currentDispatcher.end('skip')
+  }
+  if (store.getState().queue.length == 0) {
+    console.log('queue is empty')
+  }
   const song = store.getState().queue[0]
-  store.dispatch(QUEUE_RESUME)
   voiceChannel.join().then(connection => {
     // testing
     if (lastMessage) lastMessage.delete()
@@ -75,7 +80,10 @@ const onStoreUpdate = action => {
       play()
       break
     case QUEUE_ADD:
-      if (state.queue.length === 1 && state.isPlaying) play()
+      if (state.queue.length === 1 && state.isPlaying) {
+        ;('calling play from QUEUE_ADD')
+        play()
+      }
       break
     case UPDATE_VOLUME:
       if (currentDispatcher) currentDispatcher.setVolume(state.volume)

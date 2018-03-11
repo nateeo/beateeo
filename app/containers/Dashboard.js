@@ -4,24 +4,31 @@ import { ipcRenderer } from 'electron'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 
 import PlaylistEntry from '../components/PlaylistEntry'
+import Topbar from '../components/Topbar'
 
 import connect from '../state/connect'
-
 import { queueAdd, queueReorder } from '../state/actions'
 
 const Layout = styled.div`
-  background-color: black;
+  background-color: #36393e;
   width: 100vw;
   height: 100vh;
   color: white;
+  display: flex;
 `
 
-const PlaylistContainer = styled.div``
+const PlaylistContainer = styled.div`
+  height: 100%;
+`
+
+const RightContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 
 const Playlist = styled.div`
   background-color: ${props => (props.isDragging ? '#626467' : '#8E9093')};
   transition: background-color 100ms ease-out;
-  border-radius: 4px;
   padding: 10px;
   width: 250px;
   height: 100%;
@@ -51,8 +58,6 @@ class Dashboard extends Component {
       result.source.index,
       result.destination.index
     )
-    console.log('re-ordering the queue')
-    console.log(this.props.queueReorder)
     this.props.queueReorder(queue)
   }
 
@@ -68,7 +73,7 @@ class Dashboard extends Component {
                   isDragging={snapshot.isDraggingOver}
                 >
                   {this.props.queue.map((item, index) => (
-                    <PlaylistEntry index={index} song={item} />
+                    <PlaylistEntry key={item.id} index={index} song={item} />
                   ))}
                   {provided.placeholder}
                   {!this.props.queue.length && 'Playlist is empty'}
@@ -77,8 +82,11 @@ class Dashboard extends Component {
             </Droppable>
           </DragDropContext>
         </PlaylistContainer>
-        <div onClick={this.handleMessages}>SOME</div>
-        <div>current volume: {this.props.volume}</div>
+        <RightContainer>
+          <Topbar />
+          <div onClick={this.handleMessages}>SOME</div>
+          <div>current volume: {this.props.volume}</div>
+        </RightContainer>
       </Layout>
     )
   }
@@ -91,8 +99,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  queueAdd,
-  queueReorder,
+  queueAdd: song => dispatch(queueAdd(song)),
+  queueReorder: queue => dispatch(queueReorder(queue)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

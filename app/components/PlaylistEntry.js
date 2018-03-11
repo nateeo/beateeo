@@ -10,6 +10,7 @@ const Item = styled.div`
   background-color: ${props => (props.isDragging ? 'white' : '#E6E8EB')};
   padding: 10px;
   border-radius: 4px;
+  display: flex;
   margin: 5px 0;
 `
 
