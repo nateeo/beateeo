@@ -73,7 +73,6 @@ export default class Home extends Component {
 
   handleMainLoginResponse = (event, status, response) => {
     if (status === 'success') {
-      console.log('succesfully logged in')
       history.push('/dashboard')
     } else {
       console.log('error logging in')

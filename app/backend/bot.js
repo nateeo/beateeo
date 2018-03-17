@@ -81,9 +81,9 @@ const onStoreUpdate = action => {
       break
     case QUEUE_ADD:
       if (state.queue.length === 1 && state.isPlaying) {
-        ;('calling play from QUEUE_ADD')
         play()
       }
+      lastMessage.reply('Song queued!')
       break
     case UPDATE_VOLUME:
       if (currentDispatcher) currentDispatcher.setVolume(state.volume)
@@ -107,9 +107,7 @@ const getOwner = () => {
           if (!channel.members) return
           channel.members.forEach(member => {
             if (member.id == owner) {
-              console.log('Found owner!')
               if (member.voiceChannel) {
-                console.log('Owner is in a voice channel, joining')
                 member.voiceChannel.join().catch(e => console.log(e))
               }
             }
@@ -122,28 +120,29 @@ const getOwner = () => {
 
 const commanderMessage = msg => channel.send(msg)
 
-const setupMessageListener = () => console.log('setting up message listeners')
-client.on('message', async message => {
-  const content = message.content
-  if (content.startsWith(prefix) && content.length > prefix.length) {
-    lastMessage = message
-    channel = message.channel
-    voiceChannel = message.member.voiceChannel
+const setupMessageListener = () => {
+  client.on('message', async message => {
+    const content = message.content
+    if (content.startsWith(prefix) && content.length > prefix.length) {
+      lastMessage = message
+      channel = message.channel
+      voiceChannel = message.member.voiceChannel
 
-    const input = content.split(' ')
-    const command = input[0].substring(prefix.length)
-    const args = input.slice(1)
+      const input = content.split(' ')
+      const command = input[0].substring(prefix.length)
+      const args = input.slice(1)
 
-    const action = messageCommands[command]
-    if (action) {
-      commander[action.type](
-        action.args >= 0 ? args.slice(0, action.args) : args
-      )
-    } else {
-      message.reply('Unknown command.')
+      const action = messageCommands[command]
+      if (action) {
+        commander[action.type](
+          action.args >= 0 ? args.slice(0, action.args) : args
+        )
+      } else {
+        message.reply('Unknown command.')
+      }
     }
-  }
-})
+  })
+}
 
 // initialising and setting up
 
@@ -170,14 +169,12 @@ const initialize = (event, inputToken) => {
 
 const setup = browserWindow => {
   if (!store) {
-    console.log('setting up')
     store = createMainStore(browserWindow)
     commander = new Commander(store, commanderMessage)
     previousState = store.getState()
     store.subscribe(onStoreUpdate)
 
     client.on('ready', () => {
-      console.log('client ready')
       client.user.setActivity('good music', {}, '', 'STREAMING')
     })
 

@@ -58,7 +58,6 @@ export default class Commander {
   }
 
   onQueueAdd = songObj => {
-    console.log(songObj)
     ytdl.getInfo(songObj.url, (error, info) => {
       if (!error) {
         songObj.title = info.title
