@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-
 import PlaylistEntry from '../../components/PlaylistEntry'
+const { ipcRenderer } = window.require('electron')
 
 const Container = styled.div`
   height: 100%;
@@ -49,6 +49,10 @@ export default class Dashboard extends Component {
     ],
   }
 
+  send = () => {
+    ipcRenderer.send('start')
+  }
+
   handleDragEnd = result => {
     if (!result.destination) return
 
@@ -63,7 +67,7 @@ export default class Dashboard extends Component {
   render() {
     return (
       <Container>
-        <TopBar>I'm gay</TopBar>
+        <TopBar onCLick={this.send}>I'm gay</TopBar>
         <BodyContainer>
           <DragDropContext onDragEnd={this.handleDragEnd}>
             <Droppable droppableId="droppable">
