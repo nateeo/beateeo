@@ -1,3 +1,5 @@
 ## HEAVY WIP
 
-When installing deps, run `./node_modules/.bin/electron-rebuild`
+## Prerequisites
+
+brew install autoconf automake libtool
