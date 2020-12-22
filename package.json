@@ -12,7 +12,7 @@
     "electron-updater": "^3.1.5",
     "erlpack": "hammerandchisel/erlpack",
     "libsodium-wrappers": "^0.7.3",
-    "node-notifier": "^5.2.1",
+    "node-notifier": "^8.0.1",
     "node-opus": "^0.3.0",
     "react": "^16.4.0",
     "react-beautiful-dnd": "^7.1.3",
