@@ -45,7 +45,7 @@
   "devDependencies": {
     "concurrently": "^3.5.1",
     "cross-env": "^5.1.6",
-    "electron": "^2.0.2",
+    "electron": "^9.4.0",
     "electron-builder": "^20.15.1",
     "electron-rebuild": "^1.8.6",
     "husky": "^0.14.3",
